@@ -1,40 +1,38 @@
 const express = require('express');
-const bcrypt = require('bcrypt');
-const TeacherModel = require('../models/TeacherModel');
+const SubjectModel = require('../models/SubjectModel');
 const router = express.Router();
 
 router.post('/', async function(req, res) {
   try {
-    req.body.password = await bcrypt.hash(req.body.password, 10);
-    const teacher = await TeacherModel.create(req.body);
+    const subject = await SubjectModel.create(req.body);
     res.status(200).json({
       status: 'success',
-      data: teacher,
+      data: subject,
     });
   } catch (err) {
     console.log(err);
 
     res.status(500).json({
       status: 'error',
-      message: 'An error occured while creating teachers account 😭',
+      message: 'An error occured while creating subject 😭',
     });
   }
 });
 
-// Update a teacher
-router.put('/:email', async function(req, res) {
+// Update a subject
+router.put('/:_id', async function(req, res) {
   try {
-    const updatedTeacher = await TeacherModel.findOneAndUpdate(
-      { email: req.params.email },
+    const updatedTeacher = await SubjectModel.findOneAndUpdate(
+      { _id: req.params._id },
       req.body,
       { new: true }
     );
 
-    // Check if the teacher was found and updated
+    // Check if the subject was found and updated
     if (!updatedTeacher) {
       res.status(404).json({
         status: 'error',
-        message: 'Sorry that teacher does not exist 😭',
+        message: 'Sorry that subject does not exist 😭',
       });
     }
 
@@ -52,54 +50,55 @@ router.put('/:email', async function(req, res) {
   }
 });
 
-router.delete('/:email', async function(req, res) {
+router.delete('/:_id', async function(req, res) {
   try {
-    const deletedTeacher = await TeacherModel.findOneAndDelete({
-      email: req.params.email,
+    const deletedTeacher = await SubjectModel.findOneAndDelete({
+        _id: req.params._id,
     });
 
     if (!deletedTeacher) {
       res.status(404).json({
         status: 'error',
-        message: 'Sorry you cannot delete a teacher that does not exist',
+        message: 'Sorry you cannot delete a subject that does not exist',
       });
       return;
     }
 
     res.json({
       status: 'success',
-      message: '👋🏿 successfully deleted teacher',
+      message: '👋🏿 successfully deleted subject',
     });
   } catch (err) {
     console.log(err);
     res.status(500).json({
       status: 'error',
-      message: 'An error occured while deleting the teacher',
+      message: 'An error occured while deleting the subject',
     });
   }
 });
-router.get('/:email', async function(req, res) {
-  try {
-    const teacher = await TeacherModel.findOne({ email: req.params.email });
 
-    if (!teacher) {
+router.get('/:_id', async function(req, res) {
+  try {
+    const subject = await SubjectModel.findOne({ _id: req.params._id });
+
+    if (!subject) {
       res.status(404).json({
         status: 'error',
-        message: 'The teacher was not found',
+        message: 'The subject was not found',
       });
       return;
     }
 
     res.json({
       status: 'success',
-      data: teacher,
+      data: subject,
     });
   } catch (err) {
     console.log(err);
 
     res.status(500).json({
       status: 'error',
-      message: 'An error occured while getting the teacher 😭',
+      message: 'An error occured while getting the subject 😭',
     });
   }
 });

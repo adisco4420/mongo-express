@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const TeacherRoute = require('./routes/TeacherRoute');
+const SubjectRoutes = require('./routes/SubjectRoutes');
 
 const app = express();
 
@@ -23,6 +24,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 app.use('/teacher', TeacherRoute);
+app.use('/subject', SubjectRoutes);
 
 app.listen(2019).on('listening', () => {
   console.log('We are live on ' + 2019);
